@@ -52,5 +52,3 @@ eslint:
     - docker
   except:
     - schedules
-    - master
-    - production
