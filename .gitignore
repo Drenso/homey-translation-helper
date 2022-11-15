@@ -1,0 +1,9 @@
+.idea
+node_modules/
+
+# Compiled files
+*.js
+*.js.map
+
+# CSV files
+*.csv
