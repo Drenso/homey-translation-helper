@@ -1,9 +1,8 @@
 import {stringify} from 'csv';
 import fs from 'fs';
-import {type} from 'os';
-import path from 'path';
 import glob from 'glob';
 import _ from 'lodash';
+import path from 'path';
 
 type Translations = Record<string, Record<string, string | null>>;
 
@@ -11,7 +10,7 @@ function mergeTranslations(a: Translations, b: Translations): Translations {
   return _.merge(a, b);
 }
 
-function walkJson(jsonData: Record<string, any>): Translations {
+function walkJson(jsonData: Record<string, never>): Translations {
   let result: Translations = {};
 
   if (Array.isArray(jsonData)) {
@@ -29,7 +28,7 @@ function walkJson(jsonData: Record<string, any>): Translations {
   const jsonKeys = Object.keys(jsonData);
   if (jsonKeys.includes('en')) {
     // We will assume this is a translations object
-    let translation = jsonData['en'];
+    const translation = jsonData['en'];
     result[translation] = {};
     jsonKeys.forEach((jsonKey) => {
       if (jsonKey === 'en') {
@@ -65,8 +64,8 @@ export default function execute(projectPath: string, locales: string[], outFile:
   console.log('Parsing translations from Homey project in', projectPath);
 
   const transCalls: Array<() => Translations> = [
-    () => retrieveFromJson(path.join(projectPath, '.homeychangelog.json')),
-    () => retrieveFromJson(path.join(projectPath, '.homeycompose', 'app.json')),
+    (): Translations => retrieveFromJson(path.join(projectPath, '.homeychangelog.json')),
+    (): Translations => retrieveFromJson(path.join(projectPath, '.homeycompose', 'app.json')),
   ];
 
   // Find json files
