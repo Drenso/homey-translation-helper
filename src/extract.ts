@@ -1,16 +1,15 @@
-import {stringify} from 'csv';
+import {stringify} from 'csv-stringify';
 import fs from 'fs';
-import glob from 'glob';
 import _ from 'lodash';
 import path from 'path';
-
-type Translations = Record<string, Record<string, string | null>>;
+import {translationFiles} from './functions';
+import {JsonType, Translations} from './types';
 
 function mergeTranslations(a: Translations, b: Translations): Translations {
   return _.merge(a, b);
 }
 
-function walkJson(jsonData: Record<string, never>): Translations {
+function walkJson(jsonData: JsonType): Translations {
   let result: Translations = {};
 
   if (Array.isArray(jsonData)) {
@@ -63,24 +62,9 @@ export default function execute(projectPath: string, locales: string[], outFile:
   projectPath = path.resolve(projectPath);
   console.log('Parsing translations from Homey project in', projectPath);
 
-  const transCalls: Array<() => Translations> = [
-    (): Translations => retrieveFromJson(path.join(projectPath, '.homeychangelog.json')),
-    (): Translations => retrieveFromJson(path.join(projectPath, '.homeycompose', 'app.json')),
-  ];
-
-  // Find json files
-  [
-    ...glob.sync(path.join(path.join(projectPath, '.homeycompose', '/**/*.json'))),
-    ...glob.sync(path.join(path.join(projectPath, 'drivers', '/**/*.json'))),
-  ].forEach(file => {
-    if (file.match(/interview(\.\w+)?\.json$/)) {
-      return;
-    }
-    transCalls.push(() => retrieveFromJson(path.resolve(file)));
-  });
-
   let translations: Translations = {};
-  transCalls.forEach(transCall => translations = mergeTranslations(translations, transCall()));
+  translationFiles(projectPath)
+    .forEach(file => translations = mergeTranslations(translations, retrieveFromJson(file)));
 
   outFile = path.resolve(path.join(path.dirname(require.main?.filename ?? __dirname), outFile));
   console.log('Writing result to', outFile);
