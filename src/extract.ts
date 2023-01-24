@@ -78,6 +78,8 @@ export default function execute(projectPath: string, locales: string[], outFile:
     delimiter: ';',
     header: true,
     columns: ['Translation key', ...locales],
+    bom: true,
+    encoding: 'utf8',
   });
 
   Object.keys(translations).sort().forEach((translation) => {
