@@ -58,12 +58,12 @@ function retrieveFromJson(jsonPath: string): Translations {
   return walkJson(JSON.parse(fs.readFileSync(jsonPath).toString()));
 }
 
-export default function execute(projectPath: string, locales: string[], outFile: string): void {
+export default function execute(projectPath: string, locales: string[], outFile: string, includeChangelog: boolean): void {
   projectPath = path.resolve(projectPath);
   console.log('Parsing translations from Homey project in', projectPath);
 
   let translations: Translations = {};
-  translationFiles(projectPath)
+  translationFiles(projectPath, includeChangelog)
     .forEach(file => translations = mergeTranslations(translations, retrieveFromJson(file)));
 
   outFile = path.resolve(path.join(path.dirname(require.main?.filename ?? __dirname), outFile));

@@ -1,10 +1,12 @@
 import glob from 'glob';
 import path from 'path';
 
-export function translationFiles(projectPath: string): string[] {
-  const files = [
-    path.join(projectPath, '.homeychangelog.json'),
-  ];
+export function translationFiles(projectPath: string, includeReleaseNotes = false): string[] {
+  const files: string[] = [];
+
+  if (includeReleaseNotes) {
+    files.push(path.join(projectPath, '.homeychangelog.json'));
+  }
 
   // Find json files
   [

@@ -34,7 +34,7 @@ export default function execute(projectPath: string, locales: string[], inFile: 
       projectPath = path.resolve(projectPath);
       console.log('Importing translations into Homey project in', projectPath);
 
-      translationFiles(projectPath)
+      translationFiles(projectPath, true)
         .forEach((file) => importTranslations(file, locales, translations));
     });
 }
