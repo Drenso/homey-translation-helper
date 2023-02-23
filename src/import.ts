@@ -2,9 +2,11 @@ import {parse} from 'csv-parse';
 import fs from 'fs';
 import path from 'path';
 import {translationFiles} from './functions';
+import {parseLocales} from './locales';
 import {JsonType, Translations} from './types';
 
 export default function execute(projectPath: string, locales: string[], inFile: string): void {
+  locales = parseLocales(locales);
 
   inFile = path.resolve(path.join(path.dirname(require.main?.filename ?? __dirname), inFile));
   console.log('Reading translations from', inFile);

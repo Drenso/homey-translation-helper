@@ -3,6 +3,7 @@ import fs from 'fs';
 import _ from 'lodash';
 import path from 'path';
 import {translationFiles} from './functions';
+import {parseLocales} from './locales';
 import {JsonType, Translations} from './types';
 
 function mergeTranslations(a: Translations, b: Translations): Translations {
@@ -59,6 +60,8 @@ function retrieveFromJson(jsonPath: string): Translations {
 }
 
 export default function execute(projectPath: string, locales: string[], outFile: string, includeChangelog: boolean): void {
+  locales = parseLocales(locales);
+
   projectPath = path.resolve(projectPath);
   console.log('Parsing translations from Homey project in', projectPath);
 

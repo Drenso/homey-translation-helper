@@ -10,7 +10,7 @@ program
   .argument('<project-path>', 'Project path to parse')
   .option('--out <out>', 'Output file, defaults to translations-out.csv')
   .option('--include-changelog', 'Also extract changelog translations')
-  .requiredOption('-l, --locale <locales...>', 'The locales to extract. English will always be used as key')
+  .requiredOption('-l, --locale <locales...>', 'The locales to extract. English will always be used as key. Use \'all\' to include all supported locales at once.')
   .action((path, options) => executeExtract(path, options.locale, options.out ?? 'translations-out.csv', options.includeChangelog));
 
 program
