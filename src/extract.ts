@@ -59,7 +59,13 @@ function retrieveFromJson(jsonPath: string): Translations {
   return walkJson(JSON.parse(fs.readFileSync(jsonPath).toString()));
 }
 
-export default function execute(projectPath: string, locales: string[], outFile: string, includeChangelog: boolean): void {
+export default function execute(
+  projectPath: string,
+  locales: string[],
+  outFile: string,
+  includeChangelog: boolean,
+  delimiter: string
+): void {
   locales = parseLocales(locales);
 
   projectPath = path.resolve(projectPath);
@@ -78,7 +84,7 @@ export default function execute(projectPath: string, locales: string[], outFile:
   const outStream = fs.createWriteStream(outFile);
 
   const stringifier = stringify({
-    delimiter: ';',
+    delimiter: delimiter,
     header: true,
     columns: ['Translation key', ...locales],
     bom: true,
