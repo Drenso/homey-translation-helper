@@ -31,10 +31,6 @@ function walkJson(jsonData: JsonType): Translations {
     const translation = jsonData['en'];
     result[translation] = {};
     jsonKeys.forEach((jsonKey) => {
-      if (jsonKey === 'en') {
-        return;
-      }
-
       result[translation][jsonKey] = jsonData[jsonKey];
     });
 

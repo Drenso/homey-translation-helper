@@ -73,10 +73,6 @@ function walkJson(jsonData: JsonType, locales: string[], translations: Translati
       const translation = translations[jsonData['en']];
       if (translation) {
         Object.keys(translation).forEach((locale) => {
-          if (locale === 'en') {
-            return;
-          }
-
           if (!locales.includes(locale)) {
             return;
           }
