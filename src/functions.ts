@@ -14,6 +14,12 @@ export function translationFiles(projectPath: string, includeReleaseNotes = fals
     ...glob.sync(path.join(path.join(projectPath, 'drivers', '/**/*.json'))),
   ].forEach(file => {
     if (file.match(/interview(\.\w+)?\.json$/)) {
+      // Ignore interviews
+      return;
+    }
+
+    if (file.match(/locales[\\/]+[a-z]{2}\.json/)) {
+      // Ignore direct translation files
       return;
     }
 

@@ -64,7 +64,7 @@ export default function execute(
   locales: string[],
   outFile: string,
   includeChangelog: boolean,
-  delimiter: string
+  delimiter: string,
 ): void {
   locales = parseLocales(locales);
 
