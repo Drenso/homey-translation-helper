@@ -10,13 +10,15 @@ function mergeTranslations(a: Translations, b: Translations): Translations {
   return _.merge(a, b);
 }
 
-function walkJson(jsonData: JsonType): Translations {
+function walkJson(filePath: string, jsonPath: string, jsonData: JsonType): Translations {
   let result: Translations = {};
 
   if (Array.isArray(jsonData)) {
-    jsonData.forEach(item => {
-      result = mergeTranslations(result, walkJson(item));
-    });
+    for (let i = 0; i < jsonData.length; i++){
+      const item = jsonData[i];
+      const arrayPath = `${jsonPath}[${i}]`;
+      result     = mergeTranslations(result, walkJson(filePath, arrayPath, item));
+    }
 
     return result;
   }
@@ -28,10 +30,12 @@ function walkJson(jsonData: JsonType): Translations {
   const jsonKeys = Object.keys(jsonData);
   if (jsonKeys.includes('en')) {
     // We will assume this is a translations object
-    const translation = jsonData['en'];
-    result[translation] = {};
+    if (!result[filePath]) {
+      result[filePath] = {}
+    }
+    result[filePath][jsonPath] = {};
     jsonKeys.forEach((jsonKey) => {
-      result[translation][jsonKey] = jsonData[jsonKey];
+      result[filePath][jsonPath][jsonKey] = jsonData[jsonKey];
     });
 
     return result;
@@ -39,20 +43,23 @@ function walkJson(jsonData: JsonType): Translations {
 
   // Recursively walk the json data
   jsonKeys.forEach(jsonKey => {
-    result = mergeTranslations(result, walkJson(jsonData[jsonKey]));
+    const childPath = jsonPath.length === 0 ? jsonKey : `${jsonPath}.${jsonKey}`
+    result = mergeTranslations(result, walkJson(filePath, childPath, jsonData[jsonKey]));
   });
 
   return result;
 }
 
-function retrieveFromJson(jsonPath: string): Translations {
-  if (!fs.existsSync(jsonPath)) {
-    console.warn('Path does not exist', jsonPath);
+function retrieveFromJson(projectPath: string, jsonFilePath: string): Translations {
+  if (!fs.existsSync(jsonFilePath)) {
+    console.warn('Path does not exist', jsonFilePath);
     return {};
   }
 
-  console.log('Reading', jsonPath);
-  return walkJson(JSON.parse(fs.readFileSync(jsonPath).toString()));
+  console.log('Reading', jsonFilePath);
+
+  const filePath = jsonFilePath.substring(projectPath.length + 1);
+  return walkJson(filePath, '', JSON.parse(fs.readFileSync(jsonFilePath).toString()));
 }
 
 export default function execute(
@@ -69,7 +76,7 @@ export default function execute(
 
   let translations: Translations = {};
   translationFiles(projectPath, includeChangelog)
-    .forEach(file => translations = mergeTranslations(translations, retrieveFromJson(file)));
+    .forEach(file => translations = mergeTranslations(translations, retrieveFromJson(projectPath, file)));
 
   outFile = path.resolve(path.join(path.dirname(require.main?.filename ?? __dirname), outFile));
   console.log('Writing result to', outFile);
@@ -82,13 +89,16 @@ export default function execute(
   const stringifier = stringify({
     delimiter: delimiter,
     header: true,
-    columns: ['Translation key', ...locales],
+    columns: ['File', 'Translation key', ...locales],
     bom: true,
     encoding: 'utf8',
   });
 
-  Object.keys(translations).sort().forEach((translation) => {
-    stringifier.write([translation, ...locales.map(locale => translations[translation][locale] ?? null)])
+  Object.keys(translations).sort().forEach((filePath) => {
+    const fileTranslations = translations[filePath];
+    Object.keys(fileTranslations).sort().forEach((translation) => {
+      stringifier.write([filePath, translation, ...locales.map(locale => fileTranslations[translation][locale] ?? null)])
+    })
   });
 
   stringifier.pipe(outStream);

@@ -1,4 +1,4 @@
-export type Translations = Record<string, Record<string, string | null>>;
+export type Translations = Record<string, Record<string, Record<string, string | null>>>;
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore Circular type
