@@ -21,7 +21,7 @@ function walkJson(jsonData: JsonType): Translations {
     return result;
   }
 
-  if (typeof jsonData !== 'object') {
+  if (typeof jsonData !== 'object' || jsonData === null) {
     return {};
   }
 

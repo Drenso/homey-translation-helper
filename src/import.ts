@@ -64,6 +64,8 @@ function walkJson(jsonData: JsonType, locales: string[], translations: Translati
     jsonData.forEach((value, index) => {
       jsonData[index] = walkJson(jsonData[index], locales, translations);
     });
+  } else if (jsonData === null) {
+    return jsonData;
   } else if (typeof jsonData === 'object') {
     const jsonKeys = Object.keys(jsonData);
     if (jsonKeys.includes('en')) {
