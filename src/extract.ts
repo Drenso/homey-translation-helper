@@ -84,7 +84,6 @@ export default function execute(
   if (fs.existsSync(outFile)) {
     fs.rmSync(outFile);
   }
-  const outStream = fs.createWriteStream(outFile);
 
   const stringifier = stringify({
     delimiter: delimiter,
@@ -101,7 +100,7 @@ export default function execute(
     })
   });
 
-  stringifier.pipe(outStream);
+  const stringResult = stringifier.read();
+  fs.writeFileSync(outFile, stringResult);
   stringifier.end();
-  outStream.close();
 }
