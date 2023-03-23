@@ -3,3 +3,6 @@ export type Translations = Record<string, Record<string, Record<string, string |
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore Circular type
 export type JsonType = Record<string, JsonType> | Array<JsonType>;
+
+export type CSVType = CSVRowType[];
+export type CSVRowType = string[]
