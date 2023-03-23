@@ -2,7 +2,7 @@ import {parse} from 'csv-parse/sync';
 import fs from 'fs';
 import {set as pathSet} from 'lodash';
 import path from 'path';
-import {translationFiles} from './functions';
+import {fileLocaleRegExp, localeFiles, translationFiles} from './functions';
 import {parseLocales} from './locales';
 import {CSVType, JsonType, Translations} from './types';
 
@@ -82,9 +82,19 @@ export default function execute(
   projectPath = path.resolve(projectPath);
   console.log('Importing translations into Homey project in', projectPath);
 
-  // TODO add writing to locale files
   translationFiles(projectPath, true)
     .forEach((file) => importTranslations(projectPath, file, translations));
+
+  if ('.homeycompose/locales' in translations) {
+    localeFiles(projectPath, locales)
+      .forEach((file) => {
+        const fileLocales = fileLocaleRegExp.exec(file);
+        if (fileLocales !== null) {
+          const fileLocale = fileLocales[0];
+          importLocale(projectPath, file, translations, fileLocale);
+        }
+      });
+  }
 }
 
 function importTranslations(projectPath: string, filePath: string, translations: Translations): void {
@@ -107,6 +117,22 @@ function importTranslations(projectPath: string, filePath: string, translations:
   }
 }
 
+function importLocale(projectPath: string, filePath: string, translations: Translations, locale: string): void {
+  if (!fs.existsSync(filePath)) {
+    console.warn('Path does not exist', filePath);
+    return;
+  }
+
+  const fileTranslations = translations['.homeycompose/locales'];
+
+  console.log('Reading', filePath);
+  const fileContent = JSON.parse(fs.readFileSync(filePath).toString());
+  const json = translateLocale(fileContent, fileTranslations, locale);
+
+  console.log('Writing', filePath);
+  fs.writeFileSync(filePath, JSON.stringify(json, undefined, 2) + '\n')
+}
+
 // override in the existing file based on the paths in the file translation
 function translateJson(jsonData: JsonType, fileTranslations: Translations[string]): JsonType {
   const jsonPaths = Object.keys(fileTranslations);
@@ -114,6 +140,17 @@ function translateJson(jsonData: JsonType, fileTranslations: Translations[string
   for (const jsonPath of jsonPaths) {
     const translations = fileTranslations[jsonPath];
     pathSet(jsonData, jsonPath,translations)
+  }
+
+  return jsonData;
+}
+
+function translateLocale(jsonData: JsonType, translations: Translations[string], locale: string): JsonType {
+  const jsonPaths = Object.keys(translations);
+
+  for (const jsonPath of jsonPaths) {
+    const localeTranslation = translations[jsonPath][locale]
+    pathSet(jsonData, jsonPath, localeTranslation)
   }
 
   return jsonData;
