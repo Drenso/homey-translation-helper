@@ -28,3 +28,13 @@ export function translationFiles(projectPath: string, includeReleaseNotes = fals
 
   return files;
 }
+
+// Get just the locale name from the filepath
+export const fileLocaleRegExp = RegExp('(?<=\\/)\\w*(?=\\.json$)');
+
+export function localeFiles(projectPath: string, locales: string[]): string[] {
+  return glob.sync(path.join(projectPath, '.homeycompose', 'locales', '*.json')).filter((file: string) => {
+    const fileLocales = fileLocaleRegExp.exec(file);
+    return fileLocales !== null && locales.includes(fileLocales[0])
+  });
+}
