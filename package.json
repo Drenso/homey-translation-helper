@@ -32,6 +32,7 @@
     "compile": "node build.js",
     "prepack": "yarn compile"
   },
+  "sideeffects": false,
   "files": [
     "bin"
   ],
