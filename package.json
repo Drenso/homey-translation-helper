@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Simple tool to help with translations within Homey projects",
   "repository": "git@gitlab.drenso.dev:intern/homey-translation-helper.git",
-  "author": "Drenso",
+  "author": "Drenso <hallo@drenso.nl>",
   "contributors": [
     "Bob van de Vijver <bob@drenso.nl>",
     "Tobias Feijten <tobias@drenso.nl>",
@@ -29,8 +29,8 @@
   "scripts": {
     "app": "ts-node index.ts",
     "lint": "eslint --ext .ts .",
-    "compile": "node build.js",
-    "prepack": "yarn compile"
+    "compile": "node build.mjs",
+    "prepack": "npm run compile"
   },
   "sideeffects": false,
   "files": [
