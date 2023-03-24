@@ -96,7 +96,6 @@ function walkLocaleJson(locale: string, jsonPath: string, jsonData: JsonType | s
 }
 
 export default function execute(
-  projectPath: string,
   locales: string[],
   outFile: string,
   includeChangelog: boolean,
@@ -104,7 +103,7 @@ export default function execute(
 ): void {
   locales = parseLocales(locales);
 
-  projectPath = path.resolve(projectPath);
+  const projectPath = process.cwd();
   console.log('Parsing translations from Homey project in', projectPath);
 
   let translations: Translations = {};
@@ -124,7 +123,7 @@ export default function execute(
 
   translations['.homeycompose/locales'] = localeTranslations;
 
-  outFile = path.resolve(path.join(path.dirname(require.main?.filename ?? __dirname), outFile));
+  outFile = path.resolve(path.join(projectPath, outFile));
   console.log('Writing result to', outFile);
 
   if (fs.existsSync(outFile)) {

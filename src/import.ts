@@ -7,14 +7,15 @@ import {parseLocales} from './locales';
 import {CSVType, JsonType, Translations} from './types';
 
 export default function execute(
-  projectPath: string,
   locales: string[],
   inFile: string,
   delimiter: string
 ): void {
+  const projectPath = process.cwd();
+
   locales = parseLocales(locales);
 
-  inFile = path.resolve(path.join(path.dirname(require.main?.filename ?? __dirname), inFile));
+  inFile = path.resolve(path.join(projectPath, inFile));
   console.log('Reading translations from', inFile);
   if (!fs.existsSync(inFile)) {
     console.error('Input file does not exist?!');
@@ -79,7 +80,6 @@ export default function execute(
     }
   }
 
-  projectPath = path.resolve(projectPath);
   console.log('Importing translations into Homey project in', projectPath);
 
   translationFiles(projectPath, true)
