@@ -1,6 +1,6 @@
 {
   "name": "@drenso/homey-translation-helper",
-  "version": "0.0.0",
+  "version": "2.0.0",
   "description": "Simple tool to help with translations within Homey projects",
   "repository": "git@gitlab.drenso.dev:intern/homey-translation-helper.git",
   "author": "Drenso",
@@ -9,14 +9,7 @@
     "Tobias Feijten <tobias@drenso.nl>",
     "Joost Loohuis <joost@loohuis.dev>"
   ],
-  "license": "MIT",
-  "main": ".build/index.js",
-  "dependencies": {
-    "commander": "9.4.1",
-    "csv-parse": "5.3.3",
-    "csv-stringify": "6.2.3",
-    "lodash": "4.17.21"
-  },
+  "license": "UNLICENSED",
   "devDependencies": {
     "@tsconfig/node16": "1.0.3",
     "@types/glob": "8.0.0",
@@ -24,19 +17,26 @@
     "@types/node": "18.11.9",
     "@typescript-eslint/eslint-plugin": "5.43.0",
     "@typescript-eslint/parser": "5.43.0",
+    "@vercel/ncc": "0.36.1",
+    "commander": "9.4.1",
+    "csv-parse": "5.3.3",
+    "csv-stringify": "6.2.3",
     "eslint": "8.27.0",
+    "lodash": "4.17.21",
     "ts-node": "10.9.1",
     "typescript": "4.8.4"
   },
   "scripts": {
     "app": "ts-node index.ts",
     "lint": "eslint --ext .ts .",
-    "compile": "tsc",
-    "clean": "tsc --build --clean",
-    "prepare": "tsc"
+    "compile": "node build.js",
+    "prepack": "yarn compile"
   },
   "files": [
-    ".build"
+    "bin"
   ],
-  "bin": ".build/index.js"
+  "bin": "./bin/index.js",
+  "engines": {
+    "node": ">=16.0.0"
+  }
 }

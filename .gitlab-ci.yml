@@ -1,54 +1,23 @@
 stages:
   - prepare
   - lint
+  - publish
 
-variables:
-  NODE_VERSION: 16
+include:
+  # Prepare
+  - project: 'intern/runner-templates'
+    ref: "9.1"
+    file: '/npm/install-js-dependencies.yml'
 
-install-js-dependencies:
-  stage: prepare
-  image: "node:${NODE_VERSION}"
-  interruptible: true
-  cache:
-    key:
-      files:
-        - package-lock.json
-      prefix: ${CI_PROJECT_PATH_SLUG}_npm
-    paths:
-      - node_modules/
-  before_script:
-    # Set npm login credentials
-    - echo "username=${NPM_USER}" >> .npmrc
-    - echo "_password=$(echo -n ${NPM_PASS} | base64)" >> .npmrc
-    - echo "//${NPM_REGISTRY}/npm:_authToken=${NPM_TOKEN}" >> .npmrc
-    - echo "email=${NPM_EMAIL}" >> .npmrc
-  script:
-    # Install the dependencies
-    - yarn
-  after_script:
-    - rm .npmrc
-  tags:
-    - docker
-  except:
-    - schedules
+  # Lint
+  - project: 'intern/runner-templates'
+    ref: "9.1"
+    file: '/npm/audit.yml'
+  - project: 'intern/runner-templates'
+    ref: "9.1"
+    file: '/npm/eslint.yml'
 
-eslint:
-  stage: lint
-  image: "node:${NODE_VERSION}"
-  interruptible: true
-  needs:
-    - install-js-dependencies
-  cache:
-    key:
-      files:
-        - package-lock.json
-      prefix: ${CI_PROJECT_PATH_SLUG}_npm
-    paths:
-      - node_modules/
-    policy: pull
-  script:
-    - yarn run lint
-  tags:
-    - docker
-  except:
-    - schedules
+  # Publish
+  - project: 'intern/runner-templates'
+    ref: "9.1"
+    file: '/npm/publish.yml'

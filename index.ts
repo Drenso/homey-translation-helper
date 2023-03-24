@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import {program} from 'commander';
 import executeExtract from './src/extract';
 import executeImport from './src/import';
