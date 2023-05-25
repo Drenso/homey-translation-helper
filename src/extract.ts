@@ -145,7 +145,7 @@ export default function execute(
     })
   });
 
+  stringifier.end();
   const stringResult = stringifier.read();
   fs.writeFileSync(outFile, stringResult);
-  stringifier.end();
 }
