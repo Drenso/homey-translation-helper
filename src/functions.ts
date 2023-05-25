@@ -13,7 +13,7 @@ export function translationFiles(projectPath: string, includeReleaseNotes = fals
     ...glob.sync(path.join(path.join(projectPath, '.homeycompose', '/**/*.json'))),
     ...glob.sync(path.join(path.join(projectPath, 'drivers', '/**/*.json'))),
   ].forEach(file => {
-    if (file.match(/interview(\.\w+)?\.json$/)) {
+    if (file.match(/interview(\.[\w-_]+)?\.json$/)) {
       // Ignore interviews
       return;
     }
