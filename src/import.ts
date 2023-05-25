@@ -9,9 +9,11 @@ import {CSVType, JsonType, Translations} from './types';
 export default function execute(
   locales: string[],
   inFile: string,
-  delimiter: string
+  delimiter: string,
+  driversDirectory: string,
+  prjPath?: string
 ): void {
-  const projectPath = process.cwd();
+  const projectPath = path.resolve(prjPath ?? process.cwd());
 
   locales = parseLocales(locales);
 
@@ -82,7 +84,7 @@ export default function execute(
 
   console.log('Importing translations into Homey project in', projectPath);
 
-  translationFiles(projectPath, true)
+  translationFiles(projectPath, true, driversDirectory)
     .forEach((file) => importTranslations(projectPath, file, translations));
 
   if ('.homeycompose/locales' in translations) {
