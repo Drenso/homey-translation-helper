@@ -12,6 +12,7 @@ program
   .option('-d, --delimiter <delimiter>', 'CSV delimiter, defaults to `;`')
   .option('--drivers-directory <directory>', 'Driver directory, defaults to `drivers`')
   .option('--project-path <directory>', 'Project path, defaults to current working directory')
+  .option('--additional-directories <directories...>', 'Additional directories inside the project to process')
   .requiredOption('-l, --locale <locales...>', 'The locales to extract. Use `all` to include all supported locales at once.')
   .action((options) => executeExtract(
     options.locale,
@@ -20,6 +21,7 @@ program
     options.delimiter ?? ';',
     options.driversDirectory ?? 'drivers',
     options.projectPath,
+    options.additionalDirectories,
   ));
 
 program
@@ -29,6 +31,7 @@ program
   .option('-d, --delimiter <delimiter>', 'CSV delimiter, defaults to `;`')
   .option('--drivers-directory <directory>', 'Driver directory, defaults to `drivers`')
   .option('--project-path <directory>', 'Project path, defaults to current working directory')
+  .option('--additional-directories <directories...>', 'Additional directories inside the project to process')
   .requiredOption('-l, --locale <locales...>', 'The locales to import')
   .action((options) => executeImport(
     options.locale,
@@ -36,6 +39,7 @@ program
     options.delimiter ?? ';',
     options.driversDirectory ?? 'drivers',
     options.projectPath,
+    options.additionalDirectories,
   ));
 
 program.parse();

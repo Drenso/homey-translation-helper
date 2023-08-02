@@ -101,7 +101,8 @@ export default function execute(
   includeChangelog: boolean,
   delimiter: string,
   driversDirectory: string,
-  prjPath?: string
+  prjPath?: string,
+  additionalDirectories?: string[],
 ): void {
   locales = parseLocales(locales);
 
@@ -109,7 +110,7 @@ export default function execute(
   console.log('Parsing translations from Homey project in', projectPath);
 
   let translations: Translations = {};
-  translationFiles(projectPath, includeChangelog, driversDirectory)
+  translationFiles(projectPath, includeChangelog, driversDirectory, additionalDirectories)
     .forEach(file => translations = mergeTranslations(translations, retrieveFromJson(projectPath, file)));
 
   let localeTranslations: Translations[string] = {}

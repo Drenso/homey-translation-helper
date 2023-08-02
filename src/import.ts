@@ -11,7 +11,8 @@ export default function execute(
   inFile: string,
   delimiter: string,
   driversDirectory: string,
-  prjPath?: string
+  prjPath?: string,
+  additionalDirectories?: string[],
 ): void {
   const projectPath = path.resolve(prjPath ?? process.cwd());
 
@@ -84,7 +85,7 @@ export default function execute(
 
   console.log('Importing translations into Homey project in', projectPath);
 
-  translationFiles(projectPath, true, driversDirectory)
+  translationFiles(projectPath, true, driversDirectory, additionalDirectories)
     .forEach((file) => importTranslations(projectPath, file, translations));
 
   if ('.homeycompose/locales' in translations) {

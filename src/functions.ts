@@ -1,17 +1,26 @@
 import glob from 'glob';
 import path from 'path';
 
-export function translationFiles(projectPath: string, includeReleaseNotes = false, driversDirectory = 'drivers'): string[] {
+export function translationFiles(projectPath: string, includeReleaseNotes = false, driversDirectory = 'drivers', additionalDirectories?: string[]): string[] {
   const files: string[] = [];
 
   if (includeReleaseNotes) {
     files.push(path.join(projectPath, '.homeychangelog.json'));
   }
 
+  let additionalFiles: string[] = [];
+
+  if (additionalDirectories) {
+    for (const additionalDirectory of additionalDirectories) {
+      additionalFiles = additionalFiles.concat(glob.sync(path.join(path.join(projectPath, additionalDirectory, '/**/*.json'))))
+    }
+  }
+
   // Find json files
   [
     ...glob.sync(path.join(path.join(projectPath, '.homeycompose', '/**/*.json'))),
     ...glob.sync(path.join(path.join(projectPath, driversDirectory, '/**/*.json'))),
+    ...additionalFiles,
   ].forEach(file => {
     if (file.match(/interview(\.[\w-_]+)?\.json$/)) {
       // Ignore interviews
