@@ -143,7 +143,7 @@ export default function execute(
   Object.keys(translations).sort().forEach((filePath) => {
     const fileTranslations = translations[filePath];
     Object.keys(fileTranslations).sort().forEach((translation) => {
-      stringifier.write([filePath, translation, ...locales.map(locale => fileTranslations[translation][locale] ?? null)])
+      stringifier.write([filePath.replaceAll('\\', '/'), translation, ...locales.map(locale => fileTranslations[translation][locale] ?? null)])
     })
   });
 

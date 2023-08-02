@@ -56,7 +56,7 @@ export default function execute(
 
   for (let i = 1; i < inRows.length; i++) {
     const row = inRows[i];
-    const jsonFile = row[0];
+    const jsonFile = row[0].replaceAll('\\', '/');
     const jsonKey  = row[1];
 
     if (!(jsonFile in translations)) {
@@ -105,7 +105,7 @@ function importTranslations(projectPath: string, filePath: string, translations:
     return;
   }
 
-  const jsonPath = filePath.slice(projectPath.length + 1)
+  const jsonPath = filePath.slice(projectPath.length + 1).replaceAll('\\', '/')
 
   if (jsonPath in translations) {
     const fileTranslations = translations[jsonPath];
