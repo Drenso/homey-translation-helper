@@ -34,6 +34,13 @@ function walkJson(filePath: string, jsonPath: string, jsonData: JsonType): Trans
   const jsonKeys = Object.keys(jsonData);
   if (jsonKeys.includes('en')) {
     // We will assume this is a translations object
+
+    if (Array.isArray(jsonData['en'])) {
+      // Fix for tags array
+      console.log(`Skipping ${jsonPath} array`)
+      return {};
+    }
+
     if (!result[filePath]) {
       result[filePath] = {}
     }
