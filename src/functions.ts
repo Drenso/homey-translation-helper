@@ -1,5 +1,6 @@
 import glob from 'glob';
 import path from 'path';
+import fs from 'fs';
 
 export function translationFiles(projectPath: string, includeReleaseNotes = false, driversDirectory = 'drivers', additionalDirectories?: string[]): string[] {
   const files: string[] = [];
@@ -46,4 +47,17 @@ export function localeFiles(projectPath: string, locales: string[]): string[] {
     const fileLocales = fileLocaleRegExp.exec(file);
     return fileLocales !== null && locales.includes(fileLocales[0])
   });
+}
+
+export function createMissingLocaleFiles(projectPath: string, locales: string[]): string[] {
+  const localeFiles: string[] = [];
+  for (const locale of locales) {
+    const localeFile = path.join(projectPath, '.homeycompose', 'locales', `${locale}.json`);
+    localeFiles.push(localeFile);
+    if (!fs.existsSync(localeFile)) {
+      console.log('Creating', localeFile)
+      fs.writeFileSync(localeFile, '{}') // Create empty json in the file
+    }
+  }
+  return localeFiles;
 }

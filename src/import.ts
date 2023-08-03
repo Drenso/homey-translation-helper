@@ -2,7 +2,11 @@ import {parse} from 'csv-parse/sync';
 import fs from 'fs';
 import {set as pathSet} from 'lodash';
 import path from 'path';
-import {fileLocaleRegExp, localeFiles, translationFiles} from './functions';
+import {
+  createMissingLocaleFiles,
+  fileLocaleRegExp,
+  translationFiles,
+} from './functions';
 import {parseLocales} from './locales';
 import {CSVType, JsonType, Translations} from './types';
 
@@ -89,7 +93,9 @@ export default function execute(
     .forEach((file) => importTranslations(projectPath, file, translations));
 
   if ('.homeycompose/locales' in translations) {
-    localeFiles(projectPath, locales)
+    const presentLocales = localeIndices.map(localeIndex => headers[localeIndex])
+    const localeFiles = createMissingLocaleFiles(projectPath, presentLocales);
+    localeFiles
       .forEach((file) => {
         const fileLocales = fileLocaleRegExp.exec(file);
         if (fileLocales !== null) {
