@@ -40,7 +40,6 @@ export default function execute(
 
   const headers = inRows[0];
   const englishLocaleIndex = headers.indexOf('en')
-  const hasEnglish = englishLocaleIndex !== -1
 
   // Get the indices for the locales that need to be written
   const localeIndices = []
@@ -75,15 +74,13 @@ export default function execute(
     for (const localeIndex of localeIndices) {
       const locale = headers[localeIndex];
       const value = row[localeIndex];
-      // Skip empty translations
+      // Set empty translations to the english one to make the fallback explicit
       if (value === '') {
-        continue
+        const englishTranslation = row[englishLocaleIndex];
+        fileTranslations[jsonKey][locale] = englishTranslation;
+      } else {
+        fileTranslations[jsonKey][locale] = value;
       }
-      // Skip translations equal to the english one
-      if (hasEnglish && localeIndex !== englishLocaleIndex && row[englishLocaleIndex] === value) {
-        continue
-      }
-      fileTranslations[jsonKey][locale] = value;
     }
   }
 
