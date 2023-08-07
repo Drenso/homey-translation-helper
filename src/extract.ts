@@ -151,7 +151,17 @@ export default function execute(
   Object.keys(translations).sort().forEach((filePath) => {
     const fileTranslations = translations[filePath];
     Object.keys(fileTranslations).sort().forEach((translation) => {
-      stringifier.write([filePath.replaceAll('\\', '/'), translation, ...locales.map(locale => fileTranslations[translation][locale] ?? null)])
+      // Ensure the paths are consistent across operating systems
+      const standardizedFilePath = filePath.replaceAll('\\', '/');
+      const filteredTranslations = locales.map(locale => {
+        // Filter out translations equal to the English fallback
+        if (locale != 'en' && fileTranslations[translation][locale] === fileTranslations[translation]['en']) {
+          return null;
+        }
+        // Fix empty translations
+        return fileTranslations[translation][locale] ?? null;
+      });
+      stringifier.write([standardizedFilePath, translation, ...filteredTranslations])
     })
   });
 
