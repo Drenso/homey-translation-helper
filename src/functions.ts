@@ -13,7 +13,7 @@ export function translationFiles(projectPath: string, includeReleaseNotes = fals
 
   if (additionalDirectories) {
     for (const additionalDirectory of additionalDirectories) {
-      additionalFiles = additionalFiles.concat(glob.sync(path.join(projectPath, additionalDirectory, '/**/*.json')))
+      additionalFiles = additionalFiles.concat(glob.sync(path.join(projectPath, additionalDirectory, '/**/*.json'), {dot: true}))
     }
   }
 
