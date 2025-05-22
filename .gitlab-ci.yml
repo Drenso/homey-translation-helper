@@ -11,18 +11,18 @@ workflow:
 include:
   # Prepare
   - project: 'intern/runner-templates'
-    ref: "15.4"
+    ref: "16.0"
     file: '/npm/install-js-dependencies.yml'
 
   # Lint
   - project: 'intern/runner-templates'
-    ref: "15.4"
+    ref: "16.0"
     file: '/npm/audit.yml'
   - project: 'intern/runner-templates'
-    ref: "15.4"
+    ref: "16.0"
     file: '/npm/eslint.yml'
 
   # Publish
   - project: 'intern/runner-templates'
-    ref: "15.4"
+    ref: "16.0"
     file: '/npm/publish.yml'
