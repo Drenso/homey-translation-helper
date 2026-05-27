@@ -1,4 +1,4 @@
-const allLocales = ['en', 'nl', 'de', 'fr', 'it', 'sv', 'no', 'es', 'da', 'ru', 'pl', 'ko'];
+const allLocales = ['en', 'nl', 'de', 'fr', 'it', 'sv', 'no', 'es', 'da', 'ru', 'pl', 'ko', 'ar'];
 
 export function parseLocales(locales: string[]): string[] {
   if (locales.includes('all')) {
