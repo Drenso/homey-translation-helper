@@ -1,6 +1,6 @@
 {
   "name": "@drenso/homey-translation-helper",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "description": "Simple tool to help with translations within Homey projects",
   "repository": {
     "type": "git",
