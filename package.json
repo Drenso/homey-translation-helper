@@ -2,7 +2,10 @@
   "name": "@drenso/homey-translation-helper",
   "version": "0.0.0",
   "description": "Simple tool to help with translations within Homey projects",
-  "repository": "git@gitlab.drenso.dev:intern/homey-translation-helper.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Drenso/homey-translation-helper.git"
+  },
   "author": "Drenso <hallo@drenso.nl>",
   "contributors": [
     "Bob van de Vijver <bob@drenso.nl>",
@@ -36,7 +39,9 @@
   "files": [
     "bin"
   ],
-  "bin": "./bin/index.js",
+  "bin": {
+    "homey-translation-helper": "bin/index.js"
+  },
   "engines": {
     "node": ">=16.0.0"
   }
