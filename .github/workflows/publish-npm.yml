@@ -1,8 +1,8 @@
 name: NPM Publish
 on:
   push:
-    branches:
-      - main
+    tags:
+      - v*
 
 env:
   VERDACCIO_TOKEN: ${{secrets.VERDACCIO_TOKEN}}
@@ -27,18 +27,7 @@ jobs:
           registry-url: https://npm.drenso.dev
       - name: Install dependencies
         run: npm ci
-      - name: Check package version
-        id: cpv
-        uses: PostHog/check-package-version@v2
-      - name: Echo versions
-        run: |
-          echo "Committed version: ${{ steps.cpv.outputs.committed-version }}"
-          echo "Published version: ${{ steps.cpv.outputs.published-version }}"
-      - name: Install dependencies
-        if: steps.cpv.outputs.is-new-version == 'true'
-        run: npm ci
       - name: Publish
-        if: steps.cpv.outputs.is-new-version == 'true'
         run: npm publish --registry=https://registry.npmjs.org --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
