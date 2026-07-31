@@ -1,0 +1,36 @@
+name: NPM Publish
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    name: Publish
+    permissions:
+      actions: write
+      contents: write
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          registry-url: https://registry.npmjs.org/
+      - name: Check package version
+        id: cpv
+        uses: PostHog/check-package-version@v2
+      - name: Echo versions
+        run: |
+          echo "Committed version: ${{ steps.cpv.outputs.committed-version }}"
+          echo "Published version: ${{ steps.cpv.outputs.published-version }}"
+      - name: Install dependencies
+        if: steps.cpv.outputs.is-new-version == 'true'
+        run: npm ci
+      - name: Publish
+        if: steps.cpv.outputs.is-new-version == 'true'
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}

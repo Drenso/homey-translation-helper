@@ -2,7 +2,6 @@ stages:
   - prepare
   - audit
   - lint
-  - publish
 
 workflow:
   rules:
@@ -13,16 +12,11 @@ include:
   - project: 'intern/runner-templates'
     ref: "17.3"
     file: '/npm/install-js-dependencies.yml'
-
-  # Lint
+  # Audit
   - project: 'intern/runner-templates'
     ref: "17.3"
     file: '/npm/audit.yml'
+  # Lint
   - project: 'intern/runner-templates'
     ref: "17.3"
     file: '/npm/eslint.yml'
-
-  # Publish
-  - project: 'intern/runner-templates'
-    ref: "17.3"
-    file: '/npm/publish.yml'
