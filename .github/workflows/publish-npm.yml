@@ -25,6 +25,8 @@ jobs:
         with:
           node-version: '24.x'
           registry-url: https://npm.drenso.dev
+      - name: Install dependencies
+        run: npm ci
       - name: Check package version
         id: cpv
         uses: PostHog/check-package-version@v2
