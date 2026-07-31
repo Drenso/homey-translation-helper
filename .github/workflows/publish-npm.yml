@@ -22,6 +22,8 @@ jobs:
       - name: Check package version
         id: cpv
         uses: PostHog/check-package-version@v2
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.VERDACCIO_TOKEN}}
       - name: Echo versions
         run: |
           echo "Committed version: ${{ steps.cpv.outputs.committed-version }}"
@@ -29,6 +31,8 @@ jobs:
       - name: Install dependencies
         if: steps.cpv.outputs.is-new-version == 'true'
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.VERDACCIO_TOKEN}}
       - name: Publish
         if: steps.cpv.outputs.is-new-version == 'true'
         run: npm publish --provenance --access public
